@@ -1,4 +1,4 @@
-# DB-Mini-Project4
+# DB-Mini-Project2
 
 ### Assignment link
 [Mini Project 2: NoSQL Databases](https://datsoftlyngby.github.io/soft2020spring/resources/b27d96f6-MP2.pdf)
