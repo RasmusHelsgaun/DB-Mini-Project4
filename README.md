@@ -226,6 +226,16 @@ movie.delete_one({
 ```
 This query took **5.73 ms** to run
 
+
+
+### Short recap of operations:
+
+|Operation|Neo4j|MongoDB|
+|---|---|---|
+|**Get most featured actor**|4.55 ms|286 ms|
+|**Update year in movie Titanic**|2.69 ms|10.1 ms|
+|**Delete movie 'Titanic'**|3.27 ms|5.73 ms|  
+ 
 ___
 
 #### CAP/ACID
