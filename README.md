@@ -226,7 +226,7 @@ movie.delete_one({
 ```
 This query took **5.73 ms** to run
 
-
+___
 
 ### Short recap of operations:
 
