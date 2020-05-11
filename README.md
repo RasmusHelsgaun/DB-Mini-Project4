@@ -68,11 +68,11 @@ One of the great features of using Neo4j is the visualization of the data.
 
 The visualization below shows 25 movies and their featured actors. 
 
-![small](./images/small.png.)
+![small](./images/small.png)
 
 We also tried to visualize 3000 movies and their featured actors which looked like this: 
 
-![3000](./images/3000.png.)
+![3000](./images/3000.png)
 
 
 **MongoDB**:  
@@ -111,7 +111,7 @@ It only took 3.62 seconds to CREATE the dataset in MongoDB which was a big impro
 
 MongoDB doesn't have the same kind of visualization as Neo4j, but the data is listed as below in the Compass GUI. 
 
-![mongodb](./images/mongodata.png.)
+![mongodb](./images/mongodata.png)
 
 
 
@@ -129,15 +129,24 @@ ORDER BY SIZE(actor) DESC LIMIT 1
 
 This query took **4.55 ms** to run but a few seconds to get visualized.  
 
-![henryoneill](./images/henryoneill.png.)
+![henryoneill](./images/henryoneill.png)
 
 
 *MongoDB*  
 
-```sql
-ff
+```python
+res = movie.aggregate([
+    { "$unwind": "$actors" },
+    { "$group": {
+        "_id": "$actors",
+        "total": {"$sum" : 1}
+    }},
+    { "$sort": { "total": -1 } },
+    { "$limit": 1 }
+])
 ```
 
+This query took **286 ms** to run. 
 
 - selecting appropriate criteria for comparison, such as access time, storage space,
 complexity, versioning, security, or similar
