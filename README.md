@@ -63,7 +63,7 @@ for k,v in movies.iterrows():
 Because the movie dataset contained several redundant columns, we made the decision to only include the columns: id, title, year, original title, date published, genre, and actor names.  
 After deciding which columns we wanted to include, we also chose to only load 5000 rows because Neo4j is not loading large datasets very fast. With that being said, when the data has been loaded it works very well and is easy to use. 
 
-After approximately 17 minutes of loading the dataset it had the size of 190,46 MB. 
+After approximately 17 minutes of loading the dataset it had the size of 199,96 MB. 
 One of the great features of using Neo4j is the visualization of the data. 
 
 The visualization below shows 25 movies and their featured actors. 
@@ -78,6 +78,7 @@ We also tried to visualize 3000 movies and their featured actors which looked li
 **MongoDB**:  
 
 ```python
+
 for k,v in movies.iterrows():
     id = v.imdb_title_id
     title = v.title
@@ -91,6 +92,22 @@ for k,v in movies.iterrows():
     except:
         actor_names = []
     
+    actor_docs = []
+    
+    for actor in actor_names:
+        search = name.find_one({"name": actor})
+        if search == None:
+            res = name.insert_one({
+                "name": actor
+            })
+            
+            actor_id = res.inserted_id
+            
+        else:
+            actor_id = search["_id"]
+
+        actor_docs.append(actor_id)
+    
     movie.insert_one({
         "id":id,
         "title":title,
@@ -98,7 +115,7 @@ for k,v in movies.iterrows():
         "original_title": original_title,
         "date_published": date_published,
         "genre": genre,
-        "actor_names": actor_names
+        "actors": actor_docs
     })
     
     for actor_name in actor_names:
@@ -107,7 +124,7 @@ for k,v in movies.iterrows():
 
 ```
  
-It only took 3.62 seconds to CREATE the dataset in MongoDB which was a big improvement to the Neo4j solution!
+It took about 7 minutes to CREATE the dataset in MongoDB which was an improvement to the Neo4j solution! The database contained 2.44 MB of data. 
 
 MongoDB doesn't have the same kind of visualization as Neo4j, but the data is listed as below in the Compass GUI. 
 
@@ -115,9 +132,18 @@ MongoDB doesn't have the same kind of visualization as Neo4j, but the data is li
 
 
 
-#### 2) selecting relevant database operations, which can be used to compare the databases
+#### 2) 
+- selecting relevant database operations, which can be used to compare the databases
+- selecting appropriate criteria for comparison, such as access time, storage space,
+complexity, versioning, security, or similar
+- creating demo code for testing the selected database operations against the selected
+comparison criteria  
+- reporting the results and conclusions.
 
-* **Get most featured actor:**
+
+____  
+
+**Get most featured actor:**
 
 *Neo4j* 
 
@@ -146,13 +172,84 @@ res = movie.aggregate([
 ])
 ```
 
-This query took **286 ms** to run. 
+This query took **286 ms** to run.  
 
-- selecting appropriate criteria for comparison, such as access time, storage space,
-complexity, versioning, security, or similar
-- creating demo code for testing the selected database operations against the selected
-comparison criteria
-- reporting the results and conclusions.
+___
+
+**Update year on movie 'Titanic':**
+
+*Neo4j*
+
+```cql
+MATCH(m:Movie { title:"Cleopatra" })
+SET m.year = 2000
+RETURN m
+```
+
+This query took **2.69 ms** to run and is visualized below:
+
+![titanic](./images/updatetitanic.png)
+
+
+*MongoDB*
+
+```python
+movie.update_one(
+	{"title": "Titanic"}, 
+	{"$set":{"year":2001}}
+);
+```
+
+This query took **10.1 ms** to run.  
+
+___
+
+**Delete movie Titanic:**
+
+*Neo4j*
+
+```cql
+MATCH (m:Movie  {title: "Titanic"})
+DETACH DELETE m
+``` 
+
+This query took **3.27 ms** to run.
+
+
+*MongoDB*  
+
+```sql
+movie.delete_one({
+    "title":"Titanic"
+})
+
+```
+This query took **5.73 ms** to run
+
+___
+
+#### CAP/ACID
+...
+
+[mongodb reference:](https://mongodbforabsolutebeginners.blogspot.com/2016/06/acid-and-cap-theroems.html)  
+
+[neo4j reference:](https://neo4j.com/blog/acid-vs-base-consistency-models-explained/) 
+
+...
+
+
+____
+
+### Conclusion
+
+From the perspective of storage space and big data, MongoDB takes the lead as the entire document database only contained 2.44 MB and Neo4j's Graph structure contained 199.96 MB. From the dataset, we only made use of 5000 movies, so using all of it would take a lot of storage space if Neo4j was the database being used.  
+
+When inserting the data from the CSV file, Neo4j was slower due to its method of storing data in the graph and creating relations between the nodes. Natively it uses indexing to being able to search directly in the properties. In the case of MongoDB it doesn't have this behaviour by default which means that it generally uses less space.
+
+However when the data is in Neo4j it is overall faster at all the different tested operations such as get, update and delete in the graph structure, compared to MongoDB's Document collections. 
+
+Overall if storage space is in your main concern, you should probably consider using mongoDB over Neo4j when storing your big data. However Neo4j comes with huge benefits when searching in complex relational data that can be presented in a graph structure. It really depends on the situation.  
+
 
 
 
