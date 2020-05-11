@@ -20,9 +20,9 @@ The dataset being used in this assignment is an IMDB movie dataset downloaded fr
 *Your task is to select two or more databases of different NoSQL types and to compare their features
 and performance in storing, scaling, providing, and processing big data.*
 
-#### Your solution includes
+### Your solution includes
 
-- preparing a large data source and loading it into both databases
+### 1) preparing a large data source and loading it into both databases
 
 We chose to implement a python script that loads both datasets into our chosen databases. 
 
@@ -68,11 +68,11 @@ One of the great features of using Neo4j is the visualization of the data.
 
 The visualization below shows 25 movies and their featured actors. 
 
-![small](./images/small.png)
+![small](./images/small.png.)
 
 We also tried to visualize 3000 movies and their featured actors which looked like this: 
 
-![3000](./images/3000.png)
+![3000](./images/3000.png.)
 
 
 **MongoDB**:  
@@ -107,14 +107,38 @@ for k,v in movies.iterrows():
 
 ```
  
-It only took a few seconds to CREATE the dataset in MongoDB which was a big improvement to the Neo4j solution. 
+It only took 3.62 seconds to CREATE the dataset in MongoDB which was a big improvement to the Neo4j solution!
 
 MongoDB doesn't have the same kind of visualization as Neo4j, but the data is listed as below in the Compass GUI. 
 
-![mongodb](./images/mongodata.png)
+![mongodb](./images/mongodata.png.)
 
 
-- selecting relevant database operations, which can be used to compare the databases
+
+#### 2) selecting relevant database operations, which can be used to compare the databases
+
+* **Get most featured actor:**
+
+*Neo4j* 
+
+```
+MATCH (a)-[:FEATURES]->(m)
+RETURN m, COLLECT(a) as actor
+ORDER BY SIZE(actor) DESC LIMIT 1
+```
+
+This query took **4.55 ms** to run but a few seconds to get visualized.  
+
+![henryoneill](./images/henryoneill.png.)
+
+
+*MongoDB*  
+
+```sql
+ff
+```
+
+
 - selecting appropriate criteria for comparison, such as access time, storage space,
 complexity, versioning, security, or similar
 - creating demo code for testing the selected database operations against the selected
