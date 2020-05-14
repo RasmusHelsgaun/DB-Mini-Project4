@@ -239,16 +239,18 @@ ___
 ___
 
 #### CAP/ACID
-...
 
-[mongodb reference:](https://mongodbforabsolutebeginners.blogspot.com/2016/06/acid-and-cap-theroems.html)  
+**Neo4j**
 
-[neo4j reference:](https://neo4j.com/blog/acid-vs-base-consistency-models-explained/) 
-
-...
+Neo4j is an Atomic, Consistent, Isolated, Durable (ACID) transaction database, similar to PostgreSQL. This makes it a good option for important data that you may have otherwise picked a relational database for. Just like transactions you’ve seen before, Neo4j transactions are all-or-nothing operations. When a transaction starts, every following operation will succeed or fail as an atomic unit—failure of one means failure of all. 
 
 
-____
+**MongoDB**
+
+By default MongoDB is strongly consistent. Assuming that the write was successful it will always be possible to read the result you just read - That is if you do a write and then a read. Since mongoDB is a single-master system, all the reads go through the primary server by default. It's possible to enable reading from the secondary databases which eventually will make MongoDB consistent. Although MongoDB is CP we can get a high availability by using the automatic failover in replica sets. 
+
+MongoDB falls under "Consistency and Partition tolerance". It means that we are compromising with "Availability" in MongoDB. 
+___
 
 ### Conclusion
 
