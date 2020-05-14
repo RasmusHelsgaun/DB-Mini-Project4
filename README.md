@@ -128,7 +128,11 @@ It took about 7 minutes to CREATE the dataset in MongoDB which was an improvemen
 
 MongoDB doesn't have the same kind of visualization as Neo4j, but the data is listed as below in the Compass GUI. 
 
-![mongodb](./images/mongodata.png)
+![mongodb](./images/mongodata1.png)
+___ 
+
+![mongodb](./images/mongodata2.png)  
+___ 
 
 
 
